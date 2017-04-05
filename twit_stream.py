@@ -31,7 +31,6 @@ class StdOutListener(StreamListener):
     def on_data(self, data):
 
         tweets = json.loads(data)
-        retweet = False
 
         with open('..\keys\Data.csv', 'a', encoding='utf-8-sig', newline='') as f:
             w = csv.writer(f, quoting=csv.QUOTE_NONNUMERIC)
@@ -85,7 +84,7 @@ class StdOutListener(StreamListener):
 
 
 if __name__ == '__main__':
-    # This handles Twitter authetification and the connection to Twitter Streaming API
+
 
     l = StdOutListener()
     auth = OAuthHandler(consumer_key, consumer_secret)
