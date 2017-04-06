@@ -6,6 +6,7 @@ from sklearn.cross_validation import train_test_split
 from sklearn.naive_bayes import MultinomialNB
 from sklearn import metrics
 from controller import translation_ar
+import os
 
 
 
@@ -16,20 +17,19 @@ class Analysis(object):
     tweets["source_num"] = tweets.Source.map({True :1, False :0})
     X = tweets.Text
     y = tweets.source_num
-        
+
     X_train, X_test, y_train, y_test = train_test_split(X,y,random_state = 1)
-    vect = TfidfVectorizer(max_df=1)
+    vect = CountVectorizer(max_df=1)
     X_train_dtm = vect.fit_transform(X_train)
     X_test_dtm = vect.transform(X_test)
 
-        
     nb = MultinomialNB()
     nb.fit(X_train_dtm, y_train)
     y_pred_class = nb.predict(X_test_dtm)
     a = metrics.accuracy_score(y_test, y_pred_class)
     c = metrics.classification_report(y_test,y_pred_class)
     d = metrics.confusion_matrix(y_test,y_pred_class)
-    print("\n Accuracy score = ",a,"\n\n",c,d)
+    print("\n Accuracy score = ",a)
 
 
 
@@ -37,7 +37,7 @@ class Analysis(object):
 
 
     def analyse_text(*args):
-        
+
         print("Please enter your text or the tweet you have found:\n")
         while(1):
             i = input()
@@ -51,7 +51,7 @@ class Analysis(object):
                 print("\nThis is a warning, your observation has been recorded.\n")
             else:
                 print("\nThis information is irrelevant.\n")
-        
+
 
 
     def scan_data(*args):
@@ -74,17 +74,18 @@ class Analysis(object):
                 evaluation = [example_prediction[0],date,user_id,translation]
                 if(example_prediction[0] == 1 and source[0] == False and rt == False):
                     w.writerow(evaluation)
-        print("Eval.csv created with a list of predictions.")
+        f.close()
 
     def format_data(*args):
-        searchwords = ('airstrike | urgent | injured | killed | approach')
+        searchwords = 'planes | plane | aircraft | air strike | urgent | injured | kill | ' \
+                      'approach | warning | spotted | helicopter | artillery | bomb |  explo'
         df = pandas.read_csv('..\keys\Eval.csv')
         df_new = df.drop_duplicates(subset='Translation')
-        df_new[df_new.Translation.str.contains(searchwords)].to_csv("..\keys\Eval.csv", index=False, encoding='utf-8-sig')
+        warnings = df_new[(df_new['Translation'].str.contains(searchwords,case=False)) & (df_new['Translation'].str.contains('aleppo',case=False))]
+        warnings.to_csv("..\keys\Warnings.csv", index=False, encoding='utf-8-sig')
 
-    
+
 if __name__ == '__main__':
-    a = Analysis()
-    a.scan_data()
-    a.format_data()
-    #a.analyse_text()
+        a = Analysis()
+        a.scan_data()
+        a.format_data()

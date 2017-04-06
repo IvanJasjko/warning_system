@@ -1,6 +1,6 @@
-import os
 from microsofttranslator import Translator
 import pandas
+import os
 
 with open("..\keys\some_keys.txt", "r") as key:
     key_list = key.readlines()
@@ -14,13 +14,14 @@ def translation_ar(x):
 def translation_en(x):
     return translate.translate(x,'en')
 
-def run(*args):
-    while (True):
-        os.system('python twit_stream.py')
-
 def remove_place(*args):
     dfr = pandas.read_csv('..\keys\Data.csv')
     keep_cols = ['Time', 'User_ID', 'User_Name', 'Text', 'Translation', 'Retweet', 'Source']
     new_dfr = dfr[keep_cols]
     new_dfr.to_csv("..\keys\Data.csv", index=False,encoding='utf-8')
+
+if __name__ == '__main__':
+    while(1):
+        os.system("python twit_stream.py")
+        print("Error Occured - Rerunning Script")
 
