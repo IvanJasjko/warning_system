@@ -2,7 +2,7 @@ import json
 import csv
 import tweepy
 from tweepy import OAuthHandler
-from microsofttranslator import Translator
+from controller import translation_en
 
 with open("..\keys\some_keys.txt", "r") as key:
     key_list = key.readlines()
@@ -16,14 +16,10 @@ access_token_secret = key_list[1]
 consumer_key = key_list[2]
 consumer_secret = key_list[3]
 
-translate = Translator(key_list[4], key_list[5])
 auth = OAuthHandler(consumer_key, consumer_secret)
 auth.set_access_token(access_token, access_token_secret)
 api = tweepy.API(auth)
 
-def translation(x):
-
-    return translate.translate(x,'ar')
 
 
 def get_all_tweets():
@@ -41,20 +37,20 @@ def get_all_tweets():
     print("Download Complete\n")
 
 
-    with open('..\keys\Sentry.csv', 'a', encoding='utf-8-sig', newline='') as f:
+    with open('..\keys\Sentry.csv', 'w', encoding='utf-8-sig', newline='') as f:
         writer = csv.writer(f)
-        heading = ['Time', 'Country', 'Place', 'User_ID', 'User_Name', 'Text', 'Translation', 'Retweet', 'Source']
-        writer.writerow(heading)
-
+        #heading = ['Time', 'Country', 'Place', 'User_ID', 'User_Name', 'Text', 'Translation', 'Retweet', 'Source']
+        #writer.writerow(heading)
         count = 0
         for tweet in all_tweets:
 
-            english = translate.translate(tweet.text, 'en')
+            english = translation_en(tweet.text)
             print("[",count,"]" , " Tweets Translated\n")
             count +=1
 
-            tweets = [[tweet.created_at], ["None"], ["None"], [tweet.user.id], tweet.user.name,tweet.text,english, tweet.retweeted,True]
+            tweets = [tweet.created_at, tweet.user.id, tweet.user.name,tweet.text,english, tweet.retweeted,True]
             writer.writerow(tweets)
+
 
 if __name__ == '__main__':
     get_all_tweets()

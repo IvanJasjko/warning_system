@@ -6,7 +6,7 @@ from tweepy import Stream
 import json
 import csv
 # from yandex_translate import YandexTranslate
-from microsofttranslator import Translator
+from controller import translation_en
 
 with open("..\keys\some_keys.txt", "r") as key:
     key_list = key.readlines()
@@ -21,7 +21,6 @@ access_token_secret = key_list[1]
 consumer_key = key_list[2]
 consumer_secret = key_list[3]
 
-translate = Translator(key_list[4], key_list[5])
 
 # List of attributes available in JSON string
 
@@ -36,8 +35,6 @@ class StdOutListener(StreamListener):
             w = csv.writer(f, quoting=csv.QUOTE_NONNUMERIC)
 
             text = tweets['text']
-            country = "None"
-            place = "None"
 
             if ('RT' not in text):
                 retweet = False
@@ -48,7 +45,7 @@ class StdOutListener(StreamListener):
             user_name = tweets['user']['name']
             time = tweets['created_at']
 
-            english = translate.translate(text, 'en')
+            english = translation_en(text)
 
             if (user_id == '4264276227'):
                 print(time + ' Sentry_Syria validation tweet collected')
@@ -57,7 +54,7 @@ class StdOutListener(StreamListener):
                 print(time + ' Public tweet collected ')
                 source = False
 
-            data = [time, country, place, user_id, user_name, text, english, retweet, source]
+            data = [time, user_id, user_name, text, english, retweet, source]
             w.writerow(data)
 
     def on_error(self, status):
@@ -69,7 +66,7 @@ class StdOutListener(StreamListener):
             w = csv.reader(f)
             h = csv.writer(f)
             counter = 0
-            heading = ['Time', 'Country', 'Place', 'User_ID', 'User_Name', 'Text', 'Translation', 'Retweet', 'Source']
+            heading = ['Time', 'User_ID', 'User_Name', 'Text', 'Translation', 'Retweet', 'Source']
 
             for row in w:
                 counter += 1
