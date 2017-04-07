@@ -1,4 +1,3 @@
-import json
 import csv
 import tweepy
 from tweepy import OAuthHandler

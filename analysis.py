@@ -29,7 +29,7 @@ class Analysis(object):
     a = metrics.accuracy_score(y_test, y_pred_class)
     c = metrics.classification_report(y_test,y_pred_class)
     d = metrics.confusion_matrix(y_test,y_pred_class)
-    print("\n Accuracy score = ",a)
+    #print("\n Accuracy score = ",a)
 
 
 
@@ -77,12 +77,13 @@ class Analysis(object):
         f.close()
 
     def format_data(*args):
-        searchwords = 'planes | plane | aircraft | air strike | urgent | injured | kill | ' \
+        searchwords = 'planes | plane | aircraft | air strike | urgent | injured | killed | ' \
                       'approach | warning | spotted | helicopter | artillery | bomb |  explo'
         df = pandas.read_csv('..\keys\Eval.csv')
         df_new = df.drop_duplicates(subset='Translation')
-        warnings = df_new[(df_new['Translation'].str.contains(searchwords,case=False)) & (df_new['Translation'].str.contains('aleppo',case=False))]
+        warnings = df_new[(df_new['Translation'].str.contains(searchwords,case=False)) & (df_new['Translation'].str.contains('aleppo | milking',case=False))]
         warnings.to_csv("..\keys\Warnings.csv", index=False, encoding='utf-8-sig')
+        print("Analysis Rerun")
 
 
 if __name__ == '__main__':

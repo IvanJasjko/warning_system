@@ -93,4 +93,4 @@ if __name__ == '__main__':
 
     words = [ ' حلب']
 
-    stream.filter(follow=['4264276227'], track=words) #, "788821589496303624"
+    stream.filter(follow=['4264276227'], track=words)

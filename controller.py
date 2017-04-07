@@ -1,6 +1,8 @@
 from microsofttranslator import Translator
 import pandas
 import os
+from threading import Thread
+import time
 
 with open("..\keys\some_keys.txt", "r") as key:
     key_list = key.readlines()
@@ -20,8 +22,18 @@ def remove_place(*args):
     new_dfr = dfr[keep_cols]
     new_dfr.to_csv("..\keys\Data.csv", index=False,encoding='utf-8')
 
-if __name__ == '__main__':
+def run_stream():
     while(1):
         os.system("python twit_stream.py")
-        print("Error Occured - Rerunning Script")
+
+def run_analysis():
+    while(1):
+        time.sleep(60)
+        os.system("python analysis.py")
+
+if __name__ == '__main__':
+    Thread(target = run_stream).start()
+    Thread(target = run_analysis).start()
+
+
 
