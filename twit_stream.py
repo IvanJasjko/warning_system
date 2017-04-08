@@ -35,6 +35,7 @@ class StdOutListener(StreamListener):
             w = csv.writer(f, quoting=csv.QUOTE_NONNUMERIC)
 
             text = tweets['text']
+            link = tweets['id']
 
             if ('RT' not in text):
                 retweet = False
@@ -54,7 +55,7 @@ class StdOutListener(StreamListener):
                 print(time + ' Public tweet collected ')
                 source = False
 
-            data = [time, user_id, user_name, text, english, retweet, source]
+            data = [time, user_id, user_name, text, english, retweet, source, link]
             w.writerow(data)
 
     def on_error(self, status):
@@ -66,7 +67,7 @@ class StdOutListener(StreamListener):
             w = csv.reader(f)
             h = csv.writer(f)
             counter = 0
-            heading = ['Time', 'User_ID', 'User_Name', 'Text', 'Translation', 'Retweet', 'Source']
+            heading = ['Time', 'User_ID', 'User_Name', 'Text', 'Translation', 'Retweet', 'Source','Tweet_ID']
 
             for row in w:
                 counter += 1

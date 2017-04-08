@@ -57,7 +57,7 @@ class Analysis(object):
 
         with open('../keys/Eval.csv','w+',encoding = 'utf-8-sig', newline='') as f:
             w = csv.writer(f)
-            heading = ["Prediction","Time","User_ID","Translation"]
+            heading = ["Prediction","Time","User_ID","Translation","Tweet_ID"]
             w.writerow(heading)
             rows = len(Analysis.tweets["source_num"])
 
@@ -65,23 +65,28 @@ class Analysis(object):
                 example = [Analysis.tweets.Text[index]]
                 source = [Analysis.data.Source[index]]
                 date = Analysis.data.Time[index]
+                tweet_id = (Analysis.data.Tweet_ID[index])
+                if tweet_id != "None":
+                    tweet_id = "https://twitter.com/statuses/" + Analysis.data.Tweet_ID[index]
                 translation = Analysis.tweets.Translation[index]
                 rt = Analysis.data.Retweet[index]
                 user_id = Analysis.data.User_ID[index]
                 prediction = Analysis.vect.transform(example)
                 example_prediction = Analysis.nb.predict(prediction)
-                evaluation = [example_prediction[0],date,user_id,translation]
+                evaluation = [example_prediction[0],date,user_id,translation,tweet_id]
                 if(example_prediction[0] == 1 and source[0] == False and rt == False):
                     w.writerow(evaluation)
         f.close()
 
     def format_data(*args):
-        searchwords = 'planes | plane | aircraft | air strike | urgent | injured | killed | ' \
-                      'approach | warning | spotted | helicopter | artillery | bomb |  explo'
+
+        key_words = 'planes | plane | aircraft | air strike | urgent | injured | killed | ' \
+                      'approach | warning | spotted | helicopter | artillery | bomb |  explosion'
+
         df = pandas.read_csv('..\keys\Eval.csv')
         df['Translation'].replace(regex=True,inplace=True,to_replace=r'(http|https)://[\w\-]+(\.[\w\-]+)+\S*',value=r'<link>')
         df_new = df.drop_duplicates(subset='Translation')
-        warnings = df_new[(df_new['Translation'].str.contains(searchwords,case=False)) & (df_new['Translation'].str.contains('aleppo | milking',case=False))]
+        warnings = df_new[(df_new['Translation'].str.contains(key_words,case=False)) & (df_new['Translation'].str.contains('aleppo | milking',case=False))]
         warnings.to_csv("..\keys\Warnings.csv", index=False, encoding='utf-8-sig')
         print("Analysis Rerun")
 

@@ -38,8 +38,6 @@ def get_all_tweets():
 
     with open('..\keys\Sentry.csv', 'w', encoding='utf-8-sig', newline='') as f:
         writer = csv.writer(f)
-        #heading = ['Time', 'Country', 'Place', 'User_ID', 'User_Name', 'Text', 'Translation', 'Retweet', 'Source']
-        #writer.writerow(heading)
         count = 0
         for tweet in all_tweets:
 
