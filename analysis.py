@@ -1,12 +1,12 @@
 import pandas
 import csv
-from sklearn.feature_extraction.text import TfidfVectorizer
+import re
 from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.cross_validation import train_test_split
 from sklearn.naive_bayes import MultinomialNB
 from sklearn import metrics
 from controller import translation_ar
-import os
+
 
 
 
@@ -80,10 +80,12 @@ class Analysis(object):
         searchwords = 'planes | plane | aircraft | air strike | urgent | injured | killed | ' \
                       'approach | warning | spotted | helicopter | artillery | bomb |  explo'
         df = pandas.read_csv('..\keys\Eval.csv')
+        df['Translation'].replace(regex=True,inplace=True,to_replace=r'(http|https)://[\w\-]+(\.[\w\-]+)+\S*',value=r'<link>')
         df_new = df.drop_duplicates(subset='Translation')
         warnings = df_new[(df_new['Translation'].str.contains(searchwords,case=False)) & (df_new['Translation'].str.contains('aleppo | milking',case=False))]
         warnings.to_csv("..\keys\Warnings.csv", index=False, encoding='utf-8-sig')
         print("Analysis Rerun")
+
 
 
 if __name__ == '__main__':
