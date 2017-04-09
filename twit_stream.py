@@ -1,12 +1,12 @@
 # -*- coding: UTF-8 -*-
+import json
+import csv
 
 from tweepy.streaming import StreamListener
 from tweepy import OAuthHandler
 from tweepy import Stream
-import json
-import csv
-# from yandex_translate import YandexTranslate
 from controller import translation_en
+from http.client import IncompleteRead
 
 with open("..\keys\some_keys.txt", "r") as key:
     key_list = key.readlines()
@@ -28,36 +28,38 @@ consumer_secret = key_list[3]
 
 class StdOutListener(StreamListener):
     def on_data(self, data):
+        try:
+            tweets = json.loads(data)
 
-        tweets = json.loads(data)
+            with open('..\keys\Data.csv', 'a', encoding='utf-8-sig', newline='') as f:
+                w = csv.writer(f, quoting=csv.QUOTE_NONNUMERIC)
 
-        with open('..\keys\Data.csv', 'a', encoding='utf-8-sig', newline='') as f:
-            w = csv.writer(f, quoting=csv.QUOTE_NONNUMERIC)
+                text = tweets['text']
+                link = tweets['id']
 
-            text = tweets['text']
-            link = tweets['id']
+                if ('RT' not in text):
+                    retweet = False
+                else:
+                    retweet = True
 
-            if ('RT' not in text):
-                retweet = False
-            else:
-                retweet = True
+                user_id = tweets['user']['id_str']
+                user_name = tweets['user']['name']
+                time = tweets['created_at']
 
-            user_id = tweets['user']['id_str']
-            user_name = tweets['user']['name']
-            time = tweets['created_at']
+                english = translation_en(text)
 
-            english = translation_en(text)
+                if (user_id == '4264276227'):
+                    print(time + ' Sentry_Syria validation tweet collected')
+                    source = True
+                else:
+                    print(time + ' Public tweet collected ')
+                    source = False
 
-            if (user_id == '4264276227'):
-                print(time + ' Sentry_Syria validation tweet collected')
-                source = True
-            else:
-                print(time + ' Public tweet collected ')
-                source = False
+                data = [time, user_id, user_name, text, english, retweet, source, link]
+                w.writerow(data)
 
-            data = [time, user_id, user_name, text, english, retweet, source, link]
-            w.writerow(data)
-
+        except KeyError:
+            pass
     def on_error(self, status):
         print(status)
 
@@ -81,17 +83,21 @@ class StdOutListener(StreamListener):
         f.close()
 
 
-if __name__ == '__main__':
+def run_stream(*args):
 
-
-    l = StdOutListener()
-    auth = OAuthHandler(consumer_key, consumer_secret)
-    auth.set_access_token(access_token, access_token_secret)
-    stream = Stream(auth, l)
-    l.heading()
     alphabet = ['غ', 'ظ', 'ض', 'ذ', 'خ', 'ث', 'ت', 'ش', 'ر', 'ق', 'ص', 'ف', 'ع', 'س', 'ن', 'م', 'ل', 'ك', 'ي', 'ط', 'ح',
                 'ز', 'و', 'ه', 'د', 'ج', 'ب']
 
-    words = [ ' حلب']
+    words = [' حلب']
+    auth = OAuthHandler(consumer_key, consumer_secret)
+    auth.set_access_token(access_token, access_token_secret)
+    l = StdOutListener()
+    l.heading()
+    while(1):
+        try:
+            stream = Stream(auth, l)
+            stream.filter(follow=['4264276227'], track=words)
 
-    stream.filter(follow=['4264276227'], track=words)
+        except IncompleteRead:
+            continue
+
