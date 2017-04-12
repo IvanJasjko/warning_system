@@ -2,6 +2,7 @@ from flask import *
 import pandas as pd
 app = Flask(__name__)
 
+
 @app.route("/warnings")
 def show_warnings():
     data = pd.read_csv('..\keys\Warnings.csv')
