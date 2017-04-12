@@ -1,0 +1,103 @@
+<html>
+<head>
+	<title>Warning Log</title>
+	<link rel=stylesheet type=text/css href="{{ url_for('static', filename='style.css') }}">
+	<meta http-equiv="refresh" content="30">
+	<meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+  	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
+  	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+
+    <link href="../static/bootstrap.min.css" rel="stylesheet">
+
+    
+    <link href="../static/scrolling-nav.css" rel="stylesheet">
+	<title>Warning Log</title>
+	<link rel=stylesheet type=text/css href="{{ url_for('static', filename='style.css') }}">
+	<meta http-equiv="refresh" content="15">
+</head>
+	
+<body id="page-top" data-spy="scroll" data-target=".navbar-fixed-top">
+
+
+    <!-- Navigation -->
+    <nav class="navbar navbar-default navbar-fixed-top" role="navigation">
+    
+        <div class = "custom">
+            <div class="navbar-header page-scroll">
+            <img src = "../static/shield.png", style="width:50px;height:50px", align = "left"></img>
+            <a class="navbar-brand page-scroll" href="/warnings">Warnings</a>
+            <a class="navbar-brand page-scroll" href="/tables">History</a>
+            </div>
+
+            <!-- Collect the nav links, forms, and other content for toggling -->
+            <div class="collapse navbar-collapse navbar-ex1-collapse">
+            </div>
+            <!-- /.navbar-collapse -->
+        </div>
+        <!-- /.container -->
+    </nav>
+</div>
+<br></br>
+<br></br>
+<div class=page align = "center">
+  <h1>Current Events</h1>
+  <br></br>
+
+  <div class = "container" style = "margin-left:-9em">{{time[-1] + zone}}
+  <a href = {{link[-1]}}><img src = "../static/bird.png", style="width:20px;height:20px;padding-bottom:2px;position:relative;left:5px;"></img></a>
+  </div>
+  <div id = "rcorners2" data-toggle="collapse" data-target="#name"><h2>{{ name }}</h2>
+  <div id="name" class="collapse"><font color="grey">{{translation[-1]}}</font></div>
+  </div>
+  <br></br>
+
+
+   <div class = "container" style = "margin-left:-9em">{{time[-2] + zone}}
+     <a href = {{link[-2]}}><img src = "../static/bird.png", style="width:20px;height:20px;padding-bottom:2px;position:relative;left:5px;"></img></a>
+</div>
+   <div id = "rcorners" data-toggle="collapse" data-target="#demo"> {{ recent[-2] }}
+   <div id="demo" class="collapse"><font color="grey">{{translation[-2]}}</font></div>
+   </div>
+   </br></br>
+
+   <div class = "container" style = "margin-left:-9em">{{time[-3] + zone}}
+     <a href = {{link[-3]}}><img src = "../static/bird.png", style="width:20px;height:20px;padding-bottom:2px;position:relative;left:5px;"></img></a>
+	</div>
+   <div id = "rcorners" data-toggle="collapse" data-target="#demo1"> {{ recent[-3] }}
+   <div id="demo1" class="collapse"><font color="grey">{{translation[-3]}}</font></div>
+   </div>
+   </br></br>
+
+
+   <div class = "container" style = "margin-left:-9em">{{time[-4] + zone}}
+     <a href = {{link[-4]}}><img src = "../static/bird.png", style="width:20px;height:20px;padding-bottom:2px;position:relative;left:5px;"></img></a>
+</div>
+   <div id = "rcorners" data-toggle="collapse" data-target="#demo2"> {{ recent[-4] }} 
+   <div id="demo2" class="collapse"><font color="grey">{{translation[-4]}}</font></div>
+   </div>
+   </br></br>
+
+   <div class = "container" style = "margin-left:-9em">{{time[-5] + zone}}
+     <a href = {{link[-5]}}><img src = "../static/bird.png", style="width:20px;height:20px;padding-bottom:2px;position:relative;left:5px;"></img></a>
+	</div>
+   <div id = "rcorners" data-toggle="collapse" data-target="#demo3"> {{ recent[-5] }}
+   <div id="demo3" class="collapse"><font color="grey">{{translation[-5]}}</font></div>
+   </div>
+   </br></br>
+
+   <div class = "container" style = "margin-left:-9em">{{time[-6] + zone}}
+     <a href = {{link[-6]}}><img src = "../static/bird.png", style="width:20px;height:20px;padding-bottom:2px;position:relative;left:5px;"></img></a>
+</div>
+   <div id = "rcorners" data-toggle="collapse" data-target="#demo4"> {{ recent[-6] }}
+   <div id="demo4" class="collapse"><font color="grey">{{translation[-6]}}</font></div>
+   </div>
+   <br></br>
+
+
+</body>
+</html>

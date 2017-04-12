@@ -1,5 +1,5 @@
 import pandas
-
+import os
 from microsofttranslator import Translator
 
 with open("..\keys\some_keys.txt", "r") as key:
@@ -21,4 +21,6 @@ def remove_place(*args):
     new_dfr.to_csv("..\keys\Data.csv", index=False,encoding='utf-8')
 
 
-
+if __name__ == '__main__':
+    while(1):
+        os.system("python twit_stream.py")

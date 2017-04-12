@@ -93,11 +93,9 @@ def run_stream(*args):
     auth.set_access_token(access_token, access_token_secret)
     l = StdOutListener()
     l.heading()
-    while(1):
-        try:
-            stream = Stream(auth, l)
-            stream.filter(follow=['4264276227'], track=words)
 
-        except IncompleteRead:
-            continue
+    stream = Stream(auth, l)
+    stream.filter(follow=['4264276227'], track=words)
 
+if __name__ == '__main__':
+    run_stream()
