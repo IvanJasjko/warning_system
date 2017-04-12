@@ -9,7 +9,7 @@ from sklearn import metrics
 
 def run_model():
 
-    data = pandas.read_csv('..\keys\Data.csv')
+    data = pandas.read_csv('keys\Data.csv')
     tweets = data
     tweets["source_num"] = tweets.Source.map({True: 1, False: 0})
     X = tweets.Text
@@ -27,7 +27,7 @@ def run_model():
     c = metrics.classification_report(y_test, y_pred_class)
     d = metrics.confusion_matrix(y_test, y_pred_class)
 
-    with open('../keys/Eval.csv', 'w+', encoding='utf-8-sig', newline='') as f:
+    with open('keys/Eval.csv', 'w+', encoding='utf-8-sig', newline='') as f:
         w = csv.writer(f)
         rows = len(tweets["source_num"])
         heading = ["Prediction", "Time", "User_Name", "User_ID", "Translation", "Tweet_ID","Tweet"]
@@ -57,13 +57,13 @@ def run_model():
                 'approaches | warning | spotted | helicopter | artillery | ' \
                 'explosion | rockets | rocket | fire'
 
-    df = pandas.read_csv('..\keys\Eval.csv')
+    df = pandas.read_csv('keys\Eval.csv')
     df['Translation'].replace(regex=True, inplace=True, to_replace=r'(http|https)://[\w\-]+(\.[\w\-]+)+\S*',
                               value=r'<link>')
     df_new = df.drop_duplicates(subset='Translation')
     warnings = df_new[(df_new['Translation'].str.contains(key_words, case=False)) & (
         df_new['Translation'].str.contains('aleppo | milking', case=False))]
-    warnings.to_csv("..\keys\Warnings.csv", index=False, encoding='utf-8-sig')
+    warnings.to_csv("keys\Warnings.csv", index=False, encoding='utf-8-sig')
 
 
     print("[Analysis Rerun]", a)

@@ -37,7 +37,7 @@ def get_all_tweets():
     print("Download Complete\n")
 
 
-    with open('..\keys\Sentry.csv', 'w', encoding='utf-8-sig', newline='') as f:
+    with open('keys\Sentry.csv', 'w', encoding='utf-8-sig', newline='') as f:
         writer = csv.writer(f)
         count = 0
         for tweet in all_tweets:
