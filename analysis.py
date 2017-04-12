@@ -36,7 +36,7 @@ def run_model():
         for index in range(rows):
             example = [tweets.Text[index]]
             source = [data.Source[index]]
-            date = data.Time[index]
+            date = (data.Time[index])
             tweet_id = (data.Tweet_ID[index])
             raw_text = (data.Text[index])
             user_name = (data.User_Name[index])
@@ -65,10 +65,8 @@ def run_model():
         df_new['Translation'].str.contains('aleppo | milking', case=False))]
     warnings.to_csv("..\keys\Warnings.csv", index=False, encoding='utf-8-sig')
 
-    #dataset = pandas.read_csv('..\keys\Data.csv')
 
     print("[Analysis Rerun]", a)
-
 
 
 if __name__ == '__main__':
