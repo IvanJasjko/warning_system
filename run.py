@@ -1,16 +1,19 @@
-from flask import *
+import os
 import pandas as pd
-app = Flask(__name__)
+from flask import *
+from threading import Thread
 
-@app.route("/warnings")
+
+app = Flask(__name__)
+@app.route("/")
 def show_warnings():
 	
     pd.set_option('display.max_colwidth', -1)
     data = pd.read_csv('..\keys\Warnings.csv')
-    data["Tweet"].replace(regex=True, inplace=True, to_replace=r'(http|https)://[\w\-]+(\.[\w\-]+)+\S*',value=r'')
-    name = data.iloc[-1]["Tweet"]
+    data["Text"].replace(regex=True, inplace=True, to_replace=r'(http|https)://[\w\-]+(\.[\w\-]+)+\S*',value=r'')
+    name = data.iloc[-1]["Text"]
 
-    recent = data["Tweet"]
+    recent = data["Text"]
     translation = data["Translation"]
     data["Time"] = pd.to_datetime(data["Time"])
     time = data["Time"].tolist()
@@ -22,12 +25,29 @@ def show_warnings():
 def show_tables():
     pd.set_option('display.max_colwidth', -1)
     data = pd.read_csv('..\keys\Warnings.csv')
-    data = data[["Time","Tweet","Translation","User_Name"]]
-    data["Tweet"].replace(regex=True, inplace=True, to_replace=r'\n|\r',value=r'')
+    data = data[["Time","Text","Translation","User_Name"]]
+    data["Text"].replace(regex=True, inplace=True, to_replace=r'\n|\r',value=r'')
     data["Translation"].replace(regex=True, inplace=True, to_replace=r'\n|\r',value=r'')
     data['Time'] = pd.DatetimeIndex(data['Time']) + pd.Timedelta(hours=3)
     df = data.reindex(index=data.index[::-1])
     return render_template('table.html',tables=[df.to_html(index=False)])
 
+
+def run_app():
+	app.run(debug=False,threaded = True)
+
+def run_stream():
+	os.system("python controller.py")
+
+def run_analysis():
+	os.system("python analysis.py")
+
 if __name__ == "__main__":
-    app.run(debug=True)
+    
+    t1 = Thread(target = run_analysis)
+    t2 = Thread(target = run_stream)
+    t3 = Thread(target = run_app)
+
+    t3.start()
+    t1.start()
+    t2.start()

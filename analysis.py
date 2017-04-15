@@ -4,7 +4,7 @@ import csv
 
 from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.model_selection import train_test_split
-from sklearn.naive_bayes import BernoulliNB
+from sklearn.naive_bayes import GaussianNB
 from sklearn import metrics
 
 def run_model():
@@ -17,41 +17,28 @@ def run_model():
 
     X_train, X_test, y_train, y_test = train_test_split(X, y, random_state=1)
     vect = CountVectorizer(max_df=1)
-    X_train_dtm = vect.fit_transform(X_train)
-    X_test_dtm = vect.transform(X_test)
+    X_train_dtm = vect.fit_transform(X_train).toarray()
+    X_test_dtm = vect.transform(X_test).toarray()
 
-    nb = BernoulliNB()
+    nb = GaussianNB()
     nb.fit(X_train_dtm, y_train)
     y_pred_class = nb.predict(X_test_dtm)
     a = metrics.accuracy_score(y_test, y_pred_class)
     c = metrics.classification_report(y_test, y_pred_class)
     d = metrics.confusion_matrix(y_test, y_pred_class)
 
-    with open('../keys/Eval.csv', 'w+', encoding='utf-8-sig', newline='') as f:
-        w = csv.writer(f)
-        rows = len(tweets["source_num"])
-        heading = ["Prediction", "Time", "User_Name", "User_ID", "Translation", "Tweet_ID","Tweet"]
-        w.writerow(heading)
+    tweets["Text"].replace(regex=True, inplace=True, to_replace=r'\n|\r|\t', value=r'')
+    tweets["Translation"].replace(regex=True, inplace=True, to_replace=r'\n|\r|\t', value=r'')
 
-        for index in range(rows):
-            example = [tweets.Text[index]]
-            source = [data.Source[index]]
-            date = (data.Time[index])
-            tweet_id = (data.Tweet_ID[index])
-            raw_text = (data.Text[index])
-            user_name = (data.User_Name[index])
-            if tweet_id != "None":
-                tweet_id = "https://twitter.com/statuses/" + data.Tweet_ID[index]
-            translation = tweets.Translation[index]
-            rt = data.Retweet[index]
-            user_id = data.User_ID[index]
-            prediction = vect.transform(example)
-            example_prediction = nb.predict(prediction)
-            evaluation = [example_prediction[0], date, user_name, user_id, translation, tweet_id,raw_text]
-            if (example_prediction[0] == 1 and source[0] == False and rt == False):
-                w.writerow(evaluation)
+    vect_data = vect.transform(tweets["Text"]).toarray()
+    prediction = nb.predict(vect_data)
+    tweets["Prediction"] = prediction
 
-    f.close()
+    pre_filter = tweets.loc[tweets.Prediction == 1][tweets.source_num == 0][tweets.Retweet == False]
+   	
+
+    pre_filter.to_csv("../keys/Eval.csv",index=False,encoding='utf-8-sig')
+
 
     key_words = 'planes | plane | aircraft | air strike | injured | killed | ' \
                 'approaches | warning | spotted | helicopter | artillery | ' \
@@ -62,7 +49,7 @@ def run_model():
     df['Translation'].replace(regex=True, inplace=True, to_replace=r'(http|https)://[\w\-]+(\.[\w\-]+)+\S*',
                               value=r'<link>')
     df_new = df.drop_duplicates(subset='Translation')
-    df_new["Tweet"].replace(regex=True, inplace=True, to_replace=r'\n|\r|\t', value=r'')
+    df_new["Text"].replace(regex=True, inplace=True, to_replace=r'\n|\r|\t', value=r'')
     df_new["Translation"].replace(regex=True, inplace=True, to_replace=r'\n|\r|\t', value=r'')
     warnings = df_new[(df_new['Translation'].str.contains(key_words, case=False)) & (
         df_new['Translation'].str.contains('aleppo | milking', case=False))]
@@ -70,7 +57,7 @@ def run_model():
     warnings.to_csv("..\keys\Warnings.csv", index=False,encoding='utf-8-sig')
 
 
-    print("[Analysis Rerun]", a)
+    print("[Analysis Rerun]", d)
 
 
 if __name__ == '__main__':

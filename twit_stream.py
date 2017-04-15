@@ -45,6 +45,7 @@ class StdOutListener(StreamListener):
                 user_id = tweets['user']['id_str']
                 user_name = tweets['user']['name']
                 time = tweets['created_at']
+                
 
                 english = translation_en(text)
 
