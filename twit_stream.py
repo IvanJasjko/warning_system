@@ -8,7 +8,7 @@ from tweepy import Stream
 from controller import translation_en
 from http.client import IncompleteRead
 
-with open("..keys\some_keys.txt", "r") as key:
+with open("..\keys\some_keys.txt", "r") as key:
     key_list = key.readlines()
     key_list = [i.strip('\n') for i in key_list]
     key.close()
@@ -31,7 +31,7 @@ class StdOutListener(StreamListener):
         try:
             tweets = json.loads(data)
 
-            with open('keys\Data.csv', 'a', encoding='utf-8-sig', newline='') as f:
+            with open('..\keys\Data.csv', 'a', encoding='utf-8-sig', newline='') as f:
                 w = csv.writer(f, quoting=csv.QUOTE_NONNUMERIC)
 
                 text = tweets['text']
@@ -65,7 +65,7 @@ class StdOutListener(StreamListener):
 
     def heading(*arg):
 
-        with open('keys\Data.csv', 'r+', encoding='utf-8-sig', newline='') as f:
+        with open('..\keys\Data.csv', 'r+', encoding='utf-8-sig', newline='') as f:
             w = csv.reader(f)
             h = csv.writer(f)
             counter = 0
