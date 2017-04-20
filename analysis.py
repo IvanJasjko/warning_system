@@ -1,5 +1,6 @@
 import pandas
 import csv
+import update
 
 
 from sklearn.feature_extraction.text import CountVectorizer
@@ -34,15 +35,15 @@ def run_model():
     prediction = nb.predict(vect_data)
     tweets["Prediction"] = prediction
 
-    pre_filter = tweets.loc[tweets.Prediction == 1][tweets.source_num == 0][tweets.Retweet == False]
+    pre_filter = tweets.loc[tweets.Prediction == 1][tweets.Retweet == False]
    	
 
     pre_filter.to_csv("../keys/Eval.csv",index=False,encoding='utf-8-sig')
 
 
-    key_words = 'planes | plane | aircraft | air strike | injured | killed | ' \
+    key_words = 'planes | plane | aircraft | air strike |' \
                 'approaches | warning | spotted | helicopter | artillery | ' \
-                'explosion | rockets | rocket | fire'
+                'rockets | rocket | fire | targeted |urgent'
 
     df = pandas.read_csv('..\keys\Eval.csv')
     df.to_csv("..\keys\Warnings.csv", index=False,encoding='utf-8-sig')
@@ -52,7 +53,7 @@ def run_model():
     df_new["Text"].replace(regex=True, inplace=True, to_replace=r'\n|\r|\t', value=r'')
     df_new["Translation"].replace(regex=True, inplace=True, to_replace=r'\n|\r|\t', value=r'')
     warnings = df_new[(df_new['Translation'].str.contains(key_words, case=False)) & (
-        df_new['Translation'].str.contains('aleppo | milking', case=False))]
+        df_new['Translation'].str.contains('aleppo|milking', case=False))]
 
     warnings.to_csv("..\keys\Warnings.csv", index=False,encoding='utf-8-sig')
 
@@ -63,5 +64,7 @@ def run_model():
 if __name__ == '__main__':
     while(1):
         run_model()
+        update.update()
+
 
 
