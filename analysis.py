@@ -35,7 +35,7 @@ def run_model():
     prediction = nb.predict(vect_data)
     tweets["Prediction"] = prediction
 
-    pre_filter = tweets.loc[tweets.Prediction == 1][tweets.Retweet == False]
+    pre_filter = tweets[(tweets.Prediction == 1) & (tweets.Retweet == False)]
    	
 
     pre_filter.to_csv("../keys/Eval.csv",index=False,encoding='utf-8-sig')
@@ -50,8 +50,6 @@ def run_model():
     df['Translation'].replace(regex=True, inplace=True, to_replace=r'(http|https)://[\w\-]+(\.[\w\-]+)+\S*',
                               value=r'<link>')
     df_new = df.drop_duplicates(subset='Translation')
-    df_new["Text"].replace(regex=True, inplace=True, to_replace=r'\n|\r|\t', value=r'')
-    df_new["Translation"].replace(regex=True, inplace=True, to_replace=r'\n|\r|\t', value=r'')
     warnings = df_new[(df_new['Translation'].str.contains(key_words, case=False)) & (
         df_new['Translation'].str.contains('aleppo|milking', case=False))]
 
