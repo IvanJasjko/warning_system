@@ -2,6 +2,7 @@ import os
 import pandas as pd
 from flask import *
 from threading import Thread
+from subprocess import Popen
 
 
 app = Flask(__name__)
@@ -30,7 +31,7 @@ def show_tables():
     data["Translation"].replace(regex=True, inplace=True, to_replace=r'\n|\r',value=r'')
     data['Time'] = pd.DatetimeIndex(data['Time']) + pd.Timedelta(hours=3)
     df = data.reindex(index=data.index[::-1])
-    return render_template('table.html',tables=[df.to_html(index=False)])
+    return render_template('Table.html',tables=[df.to_html(index=False)])
 
 
 def run_app():
@@ -43,11 +44,6 @@ def run_analysis():
 	os.system("python analysis.py")
 
 if __name__ == "__main__":
-    
-    t1 = Thread(target = run_analysis)
-    t2 = Thread(target = run_stream)
-    t3 = Thread(target = run_app)
-
-    t3.start()
-    t1.start()
-    t2.start()
+    p1 = Popen('python analysis.py', shell=True)
+    p2 = Popen('python controller.py', shell=True)
+    run_app()

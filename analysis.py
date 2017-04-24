@@ -12,7 +12,11 @@ def run_model():
 
     data = pandas.read_csv('..\keys\Data.csv')
     tweets = data
+
+    tweets["Text"].replace(regex=True, inplace=True, to_replace=r'\n|\r|\t', value=r'')
+    tweets["Translation"].replace(regex=True, inplace=True, to_replace=r'\n|\r|\t', value=r'')
     tweets["source_num"] = tweets.Source.map({True: 1, False: 0})
+
     X = tweets.Text
     y = tweets.source_num
 
@@ -28,8 +32,6 @@ def run_model():
     c = metrics.classification_report(y_test, y_pred_class)
     d = metrics.confusion_matrix(y_test, y_pred_class)
 
-    tweets["Text"].replace(regex=True, inplace=True, to_replace=r'\n|\r|\t', value=r'')
-    tweets["Translation"].replace(regex=True, inplace=True, to_replace=r'\n|\r|\t', value=r'')
 
     vect_data = vect.transform(tweets["Text"]).toarray()
     prediction = nb.predict(vect_data)
@@ -41,19 +43,22 @@ def run_model():
     pre_filter.to_csv("../keys/Eval.csv",index=False,encoding='utf-8-sig')
 
 
-    key_words = 'planes | plane | aircraft | air strike |' \
+    key_words = 'planes | plane | raid | air strike |' \
                 'approaches | warning | spotted | helicopter | artillery | ' \
-                'rockets | rocket | fire | targeted |urgent'
-
+                'rockets | rocket | targeted'
+ 
     df = pandas.read_csv('..\keys\Eval.csv')
     df.to_csv("..\keys\Warnings.csv", index=False,encoding='utf-8-sig')
     df['Translation'].replace(regex=True, inplace=True, to_replace=r'(http|https)://[\w\-]+(\.[\w\-]+)+\S*',
                               value=r'<link>')
     df_new = df.drop_duplicates(subset='Translation')
-    warnings = df_new[(df_new['Translation'].str.contains(key_words, case=False)) & (
-        df_new['Translation'].str.contains('aleppo|milking', case=False))]
 
-    warnings.to_csv("..\keys\Warnings.csv", index=False,encoding='utf-8-sig')
+    warnings = df_new[(df_new['Translation'].str.contains(key_words, case=False)) & (
+        df_new['Translation'].str.contains('aleppo|milking|urgent|Idlib', case=False))]
+
+    warnings_nl = warnings[~warnings.Translation.str.contains('\<link>')]
+
+    warnings_nl.to_csv("..\keys\Warnings.csv", index=False,encoding='utf-8-sig')
 
 
     print("[Analysis Rerun]", d)
