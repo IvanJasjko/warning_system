@@ -43,12 +43,11 @@ def run_model():
     pre_filter.to_csv("../keys/Eval.csv",index=False,encoding='utf-8-sig')
 
 
-    key_words = 'planes | plane | raid | air strike |' \
+    key_words = 'plane | raid | air strike |' \
                 'approaches | warning | spotted | helicopter | artillery | ' \
                 'rockets | rocket | targeted'
  
     df = pandas.read_csv('..\keys\Eval.csv')
-    df.to_csv("..\keys\Warnings.csv", index=False,encoding='utf-8-sig')
     df['Translation'].replace(regex=True, inplace=True, to_replace=r'(http|https)://[\w\-]+(\.[\w\-]+)+\S*',
                               value=r'<link>')
     df_new = df.drop_duplicates(subset='Translation')
@@ -61,7 +60,7 @@ def run_model():
     warnings_nl.to_csv("..\keys\Warnings.csv", index=False,encoding='utf-8-sig')
 
 
-    print("[Analysis Rerun]", d)
+    print(d,"\n[Analysis Rerun]",a)
 
 
 if __name__ == '__main__':

@@ -16,14 +16,9 @@ with open("..\keys\some_keys.txt", "r") as key:
 
 # User credentials. Should not be stored in the code.
 access_token = key_list[0]
-
 access_token_secret = key_list[1]
 consumer_key = key_list[2]
 consumer_secret = key_list[3]
-
-
-# List of attributes available in JSON string
-
 
 
 class StdOutListener(StreamListener):
@@ -61,6 +56,7 @@ class StdOutListener(StreamListener):
 
         except KeyError:
             pass
+
     def on_error(self, status):
         print(status)
 
