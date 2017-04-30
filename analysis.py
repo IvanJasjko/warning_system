@@ -1,5 +1,4 @@
 import pandas
-import csv
 import update
 
 
@@ -46,6 +45,8 @@ def run_model():
     key_words = 'plane | raid | air strike |' \
                 'approaches | warning | spotted | helicopter | artillery | ' \
                 'rockets | rocket | targeted'
+
+    indicators = 'aleppo|milking|urgent|Idlib'
  
     df = pandas.read_csv('..\keys\Eval.csv')
     df['Translation'].replace(regex=True, inplace=True, to_replace=r'(http|https)://[\w\-]+(\.[\w\-]+)+\S*',
@@ -53,7 +54,7 @@ def run_model():
     df_new = df.drop_duplicates(subset='Translation')
 
     warnings = df_new[(df_new['Translation'].str.contains(key_words, case=False)) & (
-        df_new['Translation'].str.contains('aleppo|milking|urgent|Idlib', case=False))]
+        df_new['Translation'].str.contains(indicators, case=False))]
 
     warnings_nl = warnings[~warnings.Translation.str.contains('\<link>')]
 

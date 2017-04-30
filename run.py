@@ -1,7 +1,6 @@
 import os
 import pandas as pd
 from flask import *
-from threading import Thread
 from subprocess import Popen
 
 

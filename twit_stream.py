@@ -6,7 +6,7 @@ from tweepy.streaming import StreamListener
 from tweepy import OAuthHandler
 from tweepy import Stream
 from controller import translation_en
-from http.client import IncompleteRead
+
 
 with open("..\keys\some_keys.txt", "r") as key:
     key_list = key.readlines()

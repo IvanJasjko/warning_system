@@ -1,12 +1,6 @@
 import pandas
-import csv
 
 def restore():
-
-
-
-
-
 
     main_data = pandas.read_csv("../keys/Data.csv",encoding='utf-8-sig')
     main_data["Text"].replace(regex=True, inplace=True, to_replace=r'\n|\r|\t', value=r'')
